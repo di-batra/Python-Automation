@@ -1,0 +1,24 @@
+#For most of us need to update their job portals everyday to get better job opportunities. Here is how one can automate it using Selenium Webdriver
+
+#Import Driver
+from selenium import webdriver
+
+b = webdriver.Chrome()
+
+b.get('https://www.naukri.com/nlogin/login')
+
+login = b.find_element_by_id("usernameField")
+
+login.send_keys('*******@gmail.com')
+pas = b.find_element_by_id("passwordField")
+pas.send_keys("*****")
+pas.submit()
+c.get('https://www.naukri.com/mnjuser/profile?id=&orgn=homepage')
+m=b.find_element_by_xpath('//*[@id="lazyResumeHead"]/div/div/div/div[1]/span[2]')
+m.click()
+update=b.find_element_by_xpath('//*[@id="resumeHeadlineTxt"]')
+update.clear()
+update.send_keys('Skilled in *************************************.')
+update.submit()
+
+b.close()
