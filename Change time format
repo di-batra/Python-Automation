@@ -1,0 +1,5 @@
+n = input("Enter time in am or pm: ")
+
+#11:21:30 PM
+print(n[-2:])
+print("24hr time format is: ")
