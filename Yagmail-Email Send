@@ -1,0 +1,12 @@
+import yagmail
+
+receiver = "***********@gmail.com"
+body = "Hello there from Yagmail"
+
+
+yag = yagmail.SMTP("***********@gmail.com")
+yag.send(
+    to=receiver,
+    subject="Yagmail test with attachment",
+    contents=body, 
+)
