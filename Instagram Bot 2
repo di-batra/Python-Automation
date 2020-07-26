@@ -1,0 +1,4 @@
+from time import sleep
+from instapy import InstaPy
+sleep(5)
+InstaPy(username="*********", password="********").login()
