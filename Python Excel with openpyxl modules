@@ -1,0 +1,27 @@
+from openpyxl import load_workbook
+import getopt, sys
+
+wb = load_workbook(filename="hello_world.xlsx")
+s = wb.active
+
+row_num = int(sys.argv[1])
+host = str(sys.argv[2])
+sudoers = str(sys.argv[3])
+local_acc = str(sys.argv[4])
+
+print(row_num,host,sudoers,local_acc)
+
+a1 = s.cell(row = row_num, column = 1)
+a1.value = host
+a2 = s.cell(row = row_num, column = 2)
+a2.value = sudoers
+a3 = s.cell(row = row_num, column = 3)
+a3.value = local_acc
+
+wb.save('hello_world.xlsx')
+
+#if row_num == 56:
+#server = smtplib.SMTP('smtp.gmail.com', 587)
+
+
+
