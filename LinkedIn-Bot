@@ -1,0 +1,140 @@
+from selenium import webdriver
+from time import sleep
+from bs4 import BeautifulSoup
+import os, re,requests,smtplib
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+def apply(Resume):
+    easy_apply=b.find_element_by_class_name('jobs-apply-button--top-card')
+    easy_apply.click()
+    sleep(2)
+    remove_resume=b.find_element_by_xpath('//*[@aria-label="Remove uploaded document"]')
+    remove_resume.click()
+    sleep(2)
+    upload_resume=b.find_element_by_name('file')
+    upload_resume.send_keys(Resume)
+    sleep(2)
+    b.find_element_by_id('follow-company-checkbox').click()
+    submit_button=b.find_element_by_xpath('//*[@aria-label="Submit application"]')
+    submit_button.click()
+    sleep(2)
+
+def apply2(Resume):
+    b.find_element_by_class_name('jobs-apply-button--top-card').click()
+    sleep(2)
+    b.find_element_by_xpath('//*[@aria-label="Continue to next step"]').click()
+    sleep(2)
+    b.find_element_by_xpath('//*[@aria-label="Remove uploaded document"]').click()
+    sleep(2)
+    upload_resume=b.find_element_by_name('file')
+    upload_resume.send_keys(Resume)
+    sleep(2)
+    b.find_element_by_xpath('//*[@aria-label="Continue to next step"]').click()
+    sleep(2)
+    b.find_element_by_xpath('//*[@aria-label="Review your application"]').click()
+    sleep(2)
+    b.find_element_by_id('follow-company-checkbox').click()
+    b.find_element_by_xpath('//*[@aria-label="Submit application"]').click()
+    sleep(2)
+
+##### APPLY JOBS PAGE BY PAGE
+def main(URL,Resume):
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    results = soup.find('span', class_="results-context-header__new-jobs").text
+    results_no=re.search("(\d*)\s*new",results).group(1)
+    New_list = []
+    All_IDs = []
+    i=1
+    job_num=1
+    iterations = (int(results_no) // 25) + 1
+    print(results_no, iterations,URL, Resume, i , job_num)
+    for i in range(iterations):
+        URL_1 = URL + "&start="+str(job_num)
+        print(URL_1)
+        page = requests.get(URL)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        i=i+1
+        job_num=job_num+24
+        print(job_num, i)
+        data_id = soup.find_all("li",attrs={"data-id" : True})
+        
+        for item in data_id:
+                All_IDs.append(item['data-id'])
+                print(item['data-id'])
+                b.get('https://www.linkedin.com/jobs/view/'+ item['data-id'])
+                
+                try:
+                    apply(Resume)
+                except Exception:
+                    print("Error occured during Job Application for JOB ID: "+ item['data-id'])
+                    New_list.append(item['data-id'])
+                    continue
+                else:
+                    print("Successfully completed for JOB ID: " + str(item['data-id']))
+    
+
+
+    print(All_IDs)
+    print(".....................................................")
+    print(New_list)
+    
+    
+    Final_list = []
+    for m in New_list:
+        b.get('https://www.linkedin.com/jobs/view/'+ m)
+        try:
+            apply2(Resume)
+        except Exception:
+            print("Error occured during Job Application for JOB ID: "+ m)
+            Final_list.append(item['data-id'])
+            continue
+        else:
+            print("Successfully completed for JOB ID: " + str(item['data-id']))
+    print(Final_list)
+    return Final_list, New_list, results_no, All_IDs
+            
+b = webdriver.Chrome()
+b.get('https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin')
+login = b.find_element_by_id("username").send_keys('someone@gmail.com')
+pas = b.find_element_by_id("password")
+pas.send_keys("********")
+pas.submit()
+sleep(2)
+m = b.find_element_by_xpath('//*[@id="msg-overlay"]/div[1]/header/section[1]')
+m.click()
+#b.get('https://www.linkedin.com/jobs/?showJobAlertsModal=false')
+#sleep(8)
+#b.execute_script("window.scrollTo(0, 300)")
+    
+
+jobs=["UNIX","RPA","Shell_Scripting","Automation"]
+for i in jobs:
+	print(i)
+	if(i == "Automation"):
+		URL='https://www.linkedin.com/jobs/search/?f_LF=f_AL&f_TPR=a1596307296-&geoId=92000000&keywords=automation&location=Worldwide&sortBy=DD'
+		Resume='C:\\Users\\Diksha_Batra_Resume.pdf'
+		print(URL, Resume)
+		main(URL,Resume)
+	elif(i == "Shell_Scripting"):
+		URL='https://www.linkedin.com/jobs/search/?f_LF=f_AL&f_TPR=r86400&geoId=92000000&keywords=shell%20scripting&location=Worldwide&sortBy=DD'
+		Resume='C:\\Users\\Unix_Diksha_Batra.pdf'
+		print(URL, Resume)
+		main(URL,Resume)
+	elif(i == "UNIX"):
+		URL='https://www.linkedin.com/jobs/search/?f_LF=f_AL&f_TPR=r86400&geoId=105307040&keywords=unix&location=Bengaluru%2C%20Karnataka%2C%20India&sortBy=DD'
+		Resume='C:\\Users\\Unix_Diksha_Batra.pdf'
+		print(URL, Resume)
+		main(URL,Resume)
+	elif(i == "RPA"):
+		URL='https://www.linkedin.com/jobs/search/?f_LF=f_AL&f_TPR=r86400&geoId=92000000&keywords=rpa&location=Worldwide&sortBy=DD'
+		Resume='C:\\Users\\RPA_Diksha_Batra.pdf'
+		print(URL, Resume)
+		main(URL,Resume)
+	else:
+		print("Do Nothing")
+
+
+
