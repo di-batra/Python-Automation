@@ -2,9 +2,6 @@ from selenium import webdriver
 from time import sleep
 from bs4 import BeautifulSoup
 import os, re,requests,smtplib
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 def apply(Resume):
     easy_apply=b.find_element_by_class_name('jobs-apply-button--top-card')
